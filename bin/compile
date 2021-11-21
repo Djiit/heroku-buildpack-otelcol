@@ -29,7 +29,7 @@ fi
 # Download
 if [ ! -f "$CACHE_DIR/otelcol-${VERSION}" ]; then
   echo "-----> Installing v${VERSION} of OpenTelemetry Collector"
-  wget --quiet -O otelcol.tar.gz https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v${VERSION}/otelcol_${VERSION}_linux_arm64.tar.gz
+  wget --quiet -O otelcol.tar.gz https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v${VERSION}/otelcol_${VERSION}_linux_amd64.tar.gz
   tar -xzf otelcol.tar.gz
 
   rm -f "$CACHE_DIR/otelcol-*" || true
