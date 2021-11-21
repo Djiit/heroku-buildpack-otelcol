@@ -27,7 +27,7 @@ else
 fi
 
 # Download
-if [ ! -f "$CACHE_DIR/otelcol-${VERSION}" ]; then
+if [ ! -f "$CACHE_DIR/otelcol-${VERSION}" ] || [ -n "$NOCACHE_OTELCOL" ]; then
   echo "-----> Installing v${VERSION} of OpenTelemetry Collector"
   wget --quiet -O otelcol.tar.gz https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v${VERSION}/otelcol_${VERSION}_linux_amd64.tar.gz
   tar -xzf otelcol.tar.gz
@@ -45,5 +45,5 @@ cp "$CACHE_DIR/otelcol-${VERSION}" "$BUILD_DIR/bin/otelcol"
 # Install the runner
 echo "-----> Installing OpenTelemetry Collector runner"
 mkdir -p "$BUILD_DIR/.profile.d"
-cp "$BUILDPACK_DIR/extra/otelcol.sh" "$BUILD_DIR/.profile.d/" #fixme
+cp "$BUILDPACK_DIR/extra/otelcol.sh" "$BUILD_DIR/.profile.d/"
 chmod +x "$BUILD_DIR/.profile.d/otelcol.sh"
