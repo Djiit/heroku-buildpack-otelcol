@@ -17,7 +17,7 @@ ENV_DIR=$3
 BUILDPACK_DIR=$(cd "$(dirname "$0")"; cd ..; pwd)
 
 # Set pinned version
-PINNED_VERSION="0.39.0"
+PINNED_VERSION="0.43.0"
 
 # If a version hasn't been specified, use the pinned version
 if [ -f "$ENV_DIR/OTELCOL_VERSION" ]; then
@@ -26,21 +26,30 @@ else
   VERSION="$PINNED_VERSION"
 fi
 
+OTELCOL_BINARY="otelcol"
+# If the user hasn't request otelcol-contrib explicetely, use core
+if [ -f "$ENV_DIR/OTELCOL_CONTRIB" ]; then
+  OTELCOL_CONTRIB=$(cat "$ENV_DIR/OTELCOL_CONTRIB")
+  if [ "$OTELCOL_CONTRIB" == "true" ]; then
+    OTELCOL_BINARY="otelcol-contrib"
+  fi
+fi
+
 # Download
-if [ ! -f "$CACHE_DIR/otelcol-${VERSION}" ] || [ -n "$NOCACHE_OTELCOL" ]; then
+if [ ! -f "$CACHE_DIR/${OTELCOL_BINARY}-${VERSION}" ] || [ -n "$NOCACHE_OTELCOL" ]; then
   echo "-----> Installing v${VERSION} of OpenTelemetry Collector"
-  wget --quiet -O otelcol.tar.gz https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v${VERSION}/otelcol_${VERSION}_linux_amd64.tar.gz
+  wget --quiet -O otelcol.tar.gz https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v${VERSION}/${OTELCOL_BINARY}_${VERSION}_linux_amd64.tar.gz
   tar -xzf otelcol.tar.gz
 
-  rm -f "$CACHE_DIR/otelcol-*" || true
-  mv otelcol "$CACHE_DIR/otelcol-${VERSION}"
+  rm -f "$CACHE_DIR/${OTELCOL_BINARY}-*" || true
+  mv ${OTELCOL_BINARY} "$CACHE_DIR/${OTELCOL_BINARY}-${VERSION}"
 else
   echo "-----> OpenTelemetry Collector v${VERSION} found in cache"
 fi
 
 # Copy binaries
 mkdir -p "$BUILD_DIR/bin"
-cp "$CACHE_DIR/otelcol-${VERSION}" "$BUILD_DIR/bin/otelcol"
+cp "$CACHE_DIR/${OTELCOL_BINARY}-${VERSION}" "$BUILD_DIR/bin/otelcol"
 
 # Install the runner
 echo "-----> Installing OpenTelemetry Collector runner"
