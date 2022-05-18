@@ -17,7 +17,7 @@ This allows you to modify the environment variables (for example: $DISABLE_OTELC
 
 # Disable based on dyno type
 if [ "$DYNOTYPE" == "run" ]; then
-  $DISABLE_OTELCOL="true"
+  DISABLE_OTELCOL="true"
 fi
 
 # Update configuration placeholder using the Heroku application environment variable
