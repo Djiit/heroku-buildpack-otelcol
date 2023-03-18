@@ -17,7 +17,7 @@ ENV_DIR=$3
 BUILDPACK_DIR=$(cd "$(dirname "$0")"; cd ..; pwd)
 
 # Set pinned version
-PINNED_VERSION="0.43.0"
+PINNED_VERSION="0.73.0"
 
 # If a version hasn't been specified, use the pinned version
 if [ -f "$ENV_DIR/OTELCOL_VERSION" ]; then
